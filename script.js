@@ -23,14 +23,16 @@ function calculateEverything() {
   const countdown = document.getElementById("countdown");
   const funFact = document.getElementById("funFact");
   const aiPredict = document.getElementById("aiPredict");
+  const lifeStats = document.getElementById("lifeStats");
+  const planetAge = document.getElementById("planetAge");
+  const personality = document.getElementById("personality");
+  const milestones = document.getElementById("milestones");
 
   const birthDateValue = birthDateInput.value;
   if (!birthDateValue) {
     result.innerText = "⚠️ Please enter your birthdate.";
-    breakdown.innerText = "";
-    countdown.innerText = "";
-    funFact.innerText = "";
-    aiPredict.innerText = "";
+    breakdown.innerText = countdown.innerText = funFact.innerText = aiPredict.innerText =
+      lifeStats.innerText = planetAge.innerText = personality.innerText = milestones.innerText = "";
     return;
   }
 
@@ -42,17 +44,12 @@ function calculateEverything() {
     return;
   }
 
-  // Main age in years
   let ageYears = now.getFullYear() - birthDate.getFullYear();
   const thisYearBirthday = new Date(now.getFullYear(), birthDate.getMonth(), birthDate.getDate());
-
-  if (now < thisYearBirthday) {
-    ageYears--; // hasn't had birthday yet this year
-  }
+  if (now < thisYearBirthday) ageYears--;
 
   result.innerText = `🎂 You are ${ageYears} years old!`;
 
-  // Breakdown
   const ageMilliseconds = now - birthDate;
   const ageDays = Math.floor(ageMilliseconds / (1000 * 60 * 60 * 24));
   const ageHours = Math.floor(ageMilliseconds / (1000 * 60 * 60));
@@ -69,89 +66,95 @@ function calculateEverything() {
     • ${ageSeconds} seconds
   `;
 
-  // Countdown to next birthday
   let nextBirthday = new Date(now.getFullYear(), birthDate.getMonth(), birthDate.getDate());
-  if (now > nextBirthday) {
-    nextBirthday.setFullYear(now.getFullYear() + 1);
-  }
+  if (now > nextBirthday) nextBirthday.setFullYear(now.getFullYear() + 1);
   const daysLeft = Math.ceil((nextBirthday - now) / (1000 * 60 * 60 * 24));
   countdown.innerText = daysLeft === 0
     ? "🎉 Today is your birthday!"
     : `⏳ ${daysLeft} day(s) until your next birthday`;
 
-// — Fun Fact by birth year or exact birthday —
-const year = birthDate.getFullYear();
-const month = birthDate.getMonth() + 1; // 1–12
-const day = birthDate.getDate();
+  const year = birthDate.getFullYear();
+  const month = birthDate.getMonth() + 1;
+  const day = birthDate.getDate();
 
-let fact = "";
-
-// Check birthday exact date (month/day) for historical events
-if (month === 1 && day === 1) {
-  fact = "On your birthday (Jan 1): Lincoln issued the Emancipation Proclamation in 1863, Haiti declared independence in 1804, and the euro was introduced in 2002.";
-} else if (month === 2 && day === 29) {
-  fact = "Born on Feb 29? You’re a leapling—only ~1 in 1,461 people share your birthday!"; // :contentReference[oaicite:20]{index=20}
-} else {
-  // fallback: fun fact by birth year
-  switch(year) {
-    case 2000:
-      fact = "You were born in 2000—the Millennium! The world braced for Y2K, but it passed quietly.";
-      break;
-    case 1995:
-      fact = "1995 was the birth year of JavaScript—your life began with a powerful language!";
-      break;
-    case 1983:
-      fact = "In 1983, ARPANET transitioned to TCP/IP—the birth of the modern Internet!";
-      break;
-    case 1963:
-      fact = "1963 saw the release of Mary Shelley’s *Frankenstein* remake or major cultural events.";
-      break;
-    case 2002:
-      fact = "The euro currency launched across Europe in 2002—born into a new economic era."; // :contentReference[oaicite:21]{index=21}
-      break;
-    case 1804:
-      fact = "In 1804, Haiti declared independence—the first Black-majority republic."; // :contentReference[oaicite:22]{index=22}
-      break;
-    case 1835:
-      fact = "In 1835, the U.S. national debt dropped to zero—only time in history!"; // :contentReference[oaicite:23]{index=23}
-      break;
-    case 2005:
-      fact = "2005 was the year YouTube was launched – the world got its first viral videos!";
-      break;
-    case 2016:
-      fact = "In 2016, Pokémon GO took over the streets as augmented reality exploded!";
-      break;
-    case 2010:
-      fact = "The iPad was introduced in 2010, redefining mobile computing.";
-      break;
-    case 1991:
-      fact = "1991 marked the official end of the Cold War as the USSR dissolved.";
-      break;
-    case 1989:
-      fact = "The Berlin Wall fell in 1989 – a symbol of freedom and change.";
-      break;
-    default:
-      fact = `You were born in ${year}. What a wonderful year!`;
+  let fact = "";
+  if (month === 1 && day === 1) {
+    fact = "On Jan 1: Lincoln issued the Emancipation Proclamation, Haiti declared independence, and the Euro launched!";
+  } else if (month === 2 && day === 29) {
+    fact = "Born on Feb 29? You're a leapling—only ~1 in 1,461 people share your birthday!";
+  } else {
+    switch (year) {
+      case 2000: fact = "You were born in 2000—the Millennium!"; break;
+      case 2005: fact = "2005: YouTube launched—first viral videos took over!"; break;
+      case 2010: fact = "2010: iPad debuted—redefining tablets."; break;
+      case 2016: fact = "2016: Pokémon GO took the world outdoors!"; break;
+      case 1991: fact = "1991: Cold War ends—USSR dissolves."; break;
+      case 1989: fact = "1989: The Berlin Wall falls—freedom rises."; break;
+      default: fact = `You were born in ${year}. A special year!`;
+    }
   }
-}
+  funFact.innerText = `📚 Fun Fact: ${fact}`;
 
-funFact.innerText = `📚 Fun Fact: ${fact}`;
-
-
-  // Simulated AI age prediction
-  const guess = ageYears + Math.floor(Math.random() * 5 - 2); // +/- 2
+  const guess = ageYears + Math.floor(Math.random() * 5 - 2);
   aiPredict.innerText = `🤖 AI guesses you're ${guess} years old based on vibes 😄`;
+
+  const breaths = ageDays * 23000;
+  const heartbeats = ageDays * 100000;
+  const cupsOfChai = ageDays * 1.2;
+  const steps = ageDays * 5000;
+  lifeStats.innerHTML = `
+    🧬 <strong>Your Life in Numbers:</strong><br>
+    • ${breaths.toLocaleString()} breaths<br>
+    • ${heartbeats.toLocaleString()} heartbeats<br>
+    • ~${Math.round(cupsOfChai).toLocaleString()} cups of chai ☕<br>
+    • ${steps.toLocaleString()} steps walked`;
+
+  const earthYears = ageMilliseconds / (1000 * 60 * 60 * 24 * 365.25);
+  const mars = (earthYears / 1.88).toFixed(2);
+  const jupiter = (earthYears / 11.86).toFixed(2);
+  const mercury = (earthYears / 0.24).toFixed(2);
+  const saturn = (earthYears / 29.46).toFixed(2);
+  planetAge.innerHTML = `
+    🪐 <strong>Your Age on Other Planets:</strong><br>
+    • Mercury: ${mercury} years<br>
+    • Mars: ${mars} years<br>
+    • Jupiter: ${jupiter} years<br>
+    • Saturn: ${saturn} years`;
+
+  let personalityText = "";
+  if (ageYears < 13) personalityText = "Curious and playful 👧🧒";
+  else if (ageYears < 20) personalityText = "Bold and rebellious 🌱";
+  else if (ageYears < 30) personalityText = "Curious and energetic ⚡";
+  else if (ageYears < 40) personalityText = "Focused and evolving 🔥";
+  else if (ageYears < 60) personalityText = "Wise and grounded 🌍";
+  else personalityText = "Calm and full of wisdom 🌟";
+  personality.innerText = `🧠 Personality Snapshot: ${personalityText}`;
+
+  const milestoneList = [];
+  if (year <= 2007) milestoneList.push("📱 iPhone launch (2007)");
+  if (year <= 2010) milestoneList.push("📷 Instagram founded (2010)");
+  if (year <= 2020) milestoneList.push("😷 COVID-19 pandemic (2020)");
+  if (year <= 2022) milestoneList.push("🚀 James Webb Telescope launched (2022)");
+  milestones.innerHTML = `
+    📜 <strong>Milestones You've Lived Through:</strong><br>
+    ${milestoneList.join("<br>")}`;
 }
 
 function resetForm() {
   document.getElementById("birthDate").value = "";
-  document.getElementById("result").innerText = "";
-  document.getElementById("breakdown").innerText = "";
-  document.getElementById("countdown").innerText = "";
-  document.getElementById("funFact").innerText = "";
-  document.getElementById("aiPredict").innerText = "";
-  document.getElementById("copyMsg").innerText = "";
+  ["result", "breakdown", "countdown", "funFact", "aiPredict",
+   "lifeStats", "planetAge", "personality", "milestones", "copyMsg"]
+    .forEach(id => document.getElementById(id).innerText = "");
+  document.getElementById("ageCard").scrollIntoView({ behavior: "smooth" });
 }
+
+function copyAgeCard() {
+  const card = document.getElementById("ageCard").innerText;
+  navigator.clipboard.writeText(card).then(() => {
+    document.getElementById("copyMsg").innerText = "✅ Age card copied to clipboard!";
+  });
+}
+
 function downloadImage() {
   const ageCard = document.getElementById("ageCard");
   html2canvas(ageCard).then(canvas => {
@@ -159,18 +162,5 @@ function downloadImage() {
     link.download = "age_card.png";
     link.href = canvas.toDataURL();
     link.click();
-  });
-}
-
-function copyAgeCard() {
-  const result = document.getElementById("result").innerText;
-  const breakdown = document.getElementById("breakdown").innerText;
-  const countdown = document.getElementById("countdown").innerText;
-  const funFact = document.getElementById("funFact").innerText;
-  const aiPredict = document.getElementById("aiPredict").innerText;
-
-  const cardText = `${result}\n${breakdown}\n${countdown}\n${funFact}\n${aiPredict}`;
-  navigator.clipboard.writeText(cardText).then(() => {
-    document.getElementById("copyMsg").innerText = "✅ Age card copied to clipboard!";
   });
 }
