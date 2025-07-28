@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ultimate Age Calculator</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
 </head>
 <body>
   <div class="container">
@@ -23,14 +25,19 @@
         <button onclick="resetForm()">Reset</button>
       </div>
 
+      <div id="ageCard">
       <div id="result"></div>
       <div id="breakdown"></div>
       <div id="countdown"></div>
       <div id="funFact"></div>
       <div id="aiPredict"></div>
+      </div>
+
 
       <button class="share-btn" onclick="copyAgeCard()">📋 Copy Age Card</button>
       <div id="copyMsg"></div>
+      <button onclick="downloadImage()">📸 Download Age Card</button>
+
     </div>
   </div>
 

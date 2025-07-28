@@ -79,15 +79,64 @@ function calculateEverything() {
     ? "🎉 Today is your birthday!"
     : `⏳ ${daysLeft} day(s) until your next birthday`;
 
-  // Fun Fact (static example)
-  const birthYear = birthDate.getFullYear();
-  let fact = "";
-  if (birthYear === 2004) fact = "You were born the year Facebook was founded!";
-  else if (birthYear === 1995) fact = "JavaScript was created in your birth year!";
-  else if (birthYear === 2010) fact = "iPad was launched the year you were born!";
-  else fact = `You were born in ${birthYear}. A great year!`;
+// — Fun Fact by birth year or exact birthday —
+const year = birthDate.getFullYear();
+const month = birthDate.getMonth() + 1; // 1–12
+const day = birthDate.getDate();
 
-  funFact.innerText = `📚 Fun Fact: ${fact}`;
+let fact = "";
+
+// Check birthday exact date (month/day) for historical events
+if (month === 1 && day === 1) {
+  fact = "On your birthday (Jan 1): Lincoln issued the Emancipation Proclamation in 1863, Haiti declared independence in 1804, and the euro was introduced in 2002.";
+} else if (month === 2 && day === 29) {
+  fact = "Born on Feb 29? You’re a leapling—only ~1 in 1,461 people share your birthday!"; // :contentReference[oaicite:20]{index=20}
+} else {
+  // fallback: fun fact by birth year
+  switch(year) {
+    case 2000:
+      fact = "You were born in 2000—the Millennium! The world braced for Y2K, but it passed quietly.";
+      break;
+    case 1995:
+      fact = "1995 was the birth year of JavaScript—your life began with a powerful language!";
+      break;
+    case 1983:
+      fact = "In 1983, ARPANET transitioned to TCP/IP—the birth of the modern Internet!";
+      break;
+    case 1963:
+      fact = "1963 saw the release of Mary Shelley’s *Frankenstein* remake or major cultural events.";
+      break;
+    case 2002:
+      fact = "The euro currency launched across Europe in 2002—born into a new economic era."; // :contentReference[oaicite:21]{index=21}
+      break;
+    case 1804:
+      fact = "In 1804, Haiti declared independence—the first Black-majority republic."; // :contentReference[oaicite:22]{index=22}
+      break;
+    case 1835:
+      fact = "In 1835, the U.S. national debt dropped to zero—only time in history!"; // :contentReference[oaicite:23]{index=23}
+      break;
+    case 2005:
+      fact = "2005 was the year YouTube was launched – the world got its first viral videos!";
+      break;
+    case 2016:
+      fact = "In 2016, Pokémon GO took over the streets as augmented reality exploded!";
+      break;
+    case 2010:
+      fact = "The iPad was introduced in 2010, redefining mobile computing.";
+      break;
+    case 1991:
+      fact = "1991 marked the official end of the Cold War as the USSR dissolved.";
+      break;
+    case 1989:
+      fact = "The Berlin Wall fell in 1989 – a symbol of freedom and change.";
+      break;
+    default:
+      fact = `You were born in ${year}. What a wonderful year!`;
+  }
+}
+
+funFact.innerText = `📚 Fun Fact: ${fact}`;
+
 
   // Simulated AI age prediction
   const guess = ageYears + Math.floor(Math.random() * 5 - 2); // +/- 2
@@ -102,6 +151,15 @@ function resetForm() {
   document.getElementById("funFact").innerText = "";
   document.getElementById("aiPredict").innerText = "";
   document.getElementById("copyMsg").innerText = "";
+}
+function downloadImage() {
+  const ageCard = document.getElementById("ageCard");
+  html2canvas(ageCard).then(canvas => {
+    const link = document.createElement("a");
+    link.download = "age_card.png";
+    link.href = canvas.toDataURL();
+    link.click();
+  });
 }
 
 function copyAgeCard() {
