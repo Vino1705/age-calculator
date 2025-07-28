@@ -16,21 +16,6 @@ function toggleTheme() {
   themeBtn.innerText = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
 }
 
-function animateCount(element, target) {
-  let count = 0;
-  const step = Math.ceil(target / 60);
-  function update() {
-    count += step;
-    if (count >= target) {
-      element.innerText = target.toLocaleString();
-    } else {
-      element.innerText = count.toLocaleString();
-      requestAnimationFrame(update);
-    }
-  }
-  update();
-}
-
 function calculateEverything() {
   const birthDateInput = document.getElementById("birthDate");
   const result = document.getElementById("result");
@@ -38,16 +23,11 @@ function calculateEverything() {
   const countdown = document.getElementById("countdown");
   const funFact = document.getElementById("funFact");
   const aiPredict = document.getElementById("aiPredict");
-  const lifeStats = document.getElementById("lifeStats");
-  const planetAge = document.getElementById("planetAge");
-  const personality = document.getElementById("personality");
-  const milestones = document.getElementById("milestones");
 
   const birthDateValue = birthDateInput.value;
   if (!birthDateValue) {
     result.innerText = "⚠️ Please enter your birthdate.";
-    breakdown.innerText = countdown.innerText = funFact.innerText = aiPredict.innerText =
-      lifeStats.innerText = planetAge.innerText = personality.innerText = milestones.innerText = "";
+    breakdown.innerText = countdown.innerText = funFact.innerText = aiPredict.innerText = "";
     return;
   }
 
@@ -74,18 +54,12 @@ function calculateEverything() {
 
   breakdown.innerHTML = `
     🧮 <strong>Breakdown:</strong><br>
-    • <span id="monthsVal">${ageMonths}</span> months<br>
-    • <span id="daysVal">${ageDays}</span> days<br>
-    • <span id="hoursVal">${ageHours}</span> hours<br>
-    • <span id="minutesVal">${ageMinutes}</span> minutes<br>
-    • <span id="secondsVal">${ageSeconds}</span> seconds
+    • ${ageMonths} months<br>
+    • ${ageDays} days<br>
+    • ${ageHours} hours<br>
+    • ${ageMinutes} minutes<br>
+    • ${ageSeconds} seconds
   `;
-
-  animateCount(document.getElementById("monthsVal"), ageMonths);
-  animateCount(document.getElementById("daysVal"), ageDays);
-  animateCount(document.getElementById("hoursVal"), ageHours);
-  animateCount(document.getElementById("minutesVal"), ageMinutes);
-  animateCount(document.getElementById("secondsVal"), ageSeconds);
 
   let nextBirthday = new Date(now.getFullYear(), birthDate.getMonth(), birthDate.getDate());
   if (now > nextBirthday) nextBirthday.setFullYear(now.getFullYear() + 1);
@@ -118,57 +92,12 @@ function calculateEverything() {
 
   const guess = ageYears + Math.floor(Math.random() * 5 - 2);
   aiPredict.innerText = `🤖 AI guesses you're ${guess} years old based on vibes 😄`;
-
-  const breaths = ageDays * 23000;
-  const heartbeats = ageDays * 100000;
-  const cupsOfChai = ageDays * 1.2;
-  const steps = ageDays * 5000;
-  lifeStats.innerHTML = `
-    🧬 <strong>Your Life in Numbers:</strong><br>
-    • ${breaths.toLocaleString()} breaths<br>
-    • ${heartbeats.toLocaleString()} heartbeats<br>
-    • ~${Math.round(cupsOfChai).toLocaleString()} cups of chai ☕<br>
-    • ${steps.toLocaleString()} steps walked`;
-
-  const earthYears = ageMilliseconds / (1000 * 60 * 60 * 24 * 365.25);
-  const mars = (earthYears / 1.88).toFixed(2);
-  const jupiter = (earthYears / 11.86).toFixed(2);
-  const mercury = (earthYears / 0.24).toFixed(2);
-  const saturn = (earthYears / 29.46).toFixed(2);
-  planetAge.innerHTML = `
-    🪐 <strong>Your Age on Other Planets:</strong><br>
-    • Mercury: ${mercury} years<br>
-    • Mars: ${mars} years<br>
-    • Jupiter: ${jupiter} years<br>
-    • Saturn: ${saturn} years`;
-
-  let personalityText = "";
-  if (ageYears < 13) personalityText = "Curious and playful 👧🧒";
-  else if (ageYears < 20) personalityText = "Bold and rebellious 🌱";
-  else if (ageYears < 30) personalityText = "Curious and energetic ⚡";
-  else if (ageYears < 40) personalityText = "Focused and evolving 🔥";
-  else if (ageYears < 60) personalityText = "Wise and grounded 🌍";
-  else personalityText = "Calm and full of wisdom 🌟";
-  personality.innerText = `🧠 Personality Snapshot: ${personalityText}`;
-
-  const milestoneList = [];
-  if (year <= 2007) milestoneList.push("📱 iPhone launch (2007)");
-  if (year <= 2010) milestoneList.push("📷 Instagram founded (2010)");
-  if (year <= 2020) milestoneList.push("😷 COVID-19 pandemic (2020)");
-  if (year <= 2022) milestoneList.push("🚀 James Webb Telescope launched (2022)");
-  milestones.innerHTML = `
-    📜 <strong>Milestones You've Lived Through:</strong><br>
-    ${milestoneList.join("<br>")}`;
-
-  document.getElementById("ageCard").scrollIntoView({ behavior: "smooth" });
 }
 
 function resetForm() {
   document.getElementById("birthDate").value = "";
-  ["result", "breakdown", "countdown", "funFact", "aiPredict",
-   "lifeStats", "planetAge", "personality", "milestones", "copyMsg"]
+  ["result", "breakdown", "countdown", "funFact", "aiPredict", "copyMsg"]
     .forEach(id => document.getElementById(id).innerText = "");
-  document.getElementById("ageCard").scrollIntoView({ behavior: "smooth" });
 }
 
 function copyAgeCard() {
