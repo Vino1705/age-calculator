@@ -1,36 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🎂 Age Calculator</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ultimate Age Calculator</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
   <div class="container">
     <div class="card">
-      <!-- Dark mode toggle -->
       <div class="theme-toggle">
         <button onclick="toggleTheme()" id="themeBtn">🌙 Dark Mode</button>
       </div>
 
-      <h1>🎉 Age Calculator</h1>
-      <p>Find your age in style 👇</p>
+      <h1>🎉 Ultimate Age Calculator</h1>
+      <p>Discover your age, fun facts, and more!</p>
 
-      <!-- Input -->
-      <input type="number" id="birthYear" placeholder="Enter your birth year" />
+      <input type="date" id="birthDate" />
 
-      <!-- Buttons -->
       <div class="buttons">
-        <button onclick="calculateAge()">Calculate</button>
+        <button onclick="calculateEverything()">Calculate</button>
         <button onclick="resetForm()">Reset</button>
       </div>
 
-      <!-- Result -->
       <div id="result"></div>
-      <div id="milestone"></div>
-      <div id="avatar"></div>
+      <div id="breakdown"></div>
+      <div id="countdown"></div>
+      <div id="funFact"></div>
+      <div id="aiPredict"></div>
+
+      <button class="share-btn" onclick="copyAgeCard()">📋 Copy Age Card</button>
+      <div id="copyMsg"></div>
     </div>
   </div>
 

@@ -1,4 +1,4 @@
-// On load, check and apply saved theme
+// Theme toggle with localStorage
 window.onload = () => {
   const savedTheme = localStorage.getItem("theme");
   if (savedTheme === "dark") {
@@ -7,87 +7,112 @@ window.onload = () => {
   }
 };
 
-// Toggle dark/light theme
 function toggleTheme() {
   const body = document.body;
   const themeBtn = document.getElementById("themeBtn");
+  const isDark = body.classList.toggle("dark-mode");
 
-  body.classList.toggle("dark-mode");
-  const isDark = body.classList.contains("dark-mode");
-
-  // Save choice
   localStorage.setItem("theme", isDark ? "dark" : "light");
   themeBtn.innerText = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
 }
 
-// Calculate age + avatar + milestones
-function calculateAge() {
-  const birthYearInput = document.getElementById("birthYear");
+function calculateEverything() {
+  const birthDateInput = document.getElementById("birthDate");
   const result = document.getElementById("result");
-  const milestone = document.getElementById("milestone");
-  const avatar = document.getElementById("avatar");
+  const breakdown = document.getElementById("breakdown");
+  const countdown = document.getElementById("countdown");
+  const funFact = document.getElementById("funFact");
+  const aiPredict = document.getElementById("aiPredict");
 
-  const birthYear = birthYearInput.value.trim();
-  const currentYear = new Date().getFullYear();
-
-  // Reset messages
-  result.innerText = "";
-  milestone.innerText = "";
-  avatar.innerText = "";
-
-  if (birthYear === "") {
-    result.innerText = "⚠️ Please enter your birth year.";
-    result.style.color = "#ff3b3b";
+  const birthDateValue = birthDateInput.value;
+  if (!birthDateValue) {
+    result.innerText = "⚠️ Please enter your birthdate.";
+    breakdown.innerText = "";
+    countdown.innerText = "";
+    funFact.innerText = "";
+    aiPredict.innerText = "";
     return;
   }
 
-  if (birthYear > currentYear) {
+  const birthDate = new Date(birthDateValue);
+  const now = new Date();
+
+  if (birthDate > now) {
     result.innerText = "❌ You haven't been born yet!";
-    result.style.color = "#ff3b3b";
     return;
   }
 
-  const age = currentYear - birthYear;
+  // Main age in years
+  let ageYears = now.getFullYear() - birthDate.getFullYear();
+  const thisYearBirthday = new Date(now.getFullYear(), birthDate.getMonth(), birthDate.getDate());
 
-  // Show result
-  result.innerText = `🎂 You are ${age} years old.`;
-  result.style.color = "#2a5298";
-
-  // Milestone logic
-  if (age < 13) {
-    milestone.innerText = "🧒 You’re a child!";
-  } else if (age < 18) {
-    milestone.innerText = "🧑 You’re a teenager!";
-  } else if (age < 30) {
-    milestone.innerText = "🧑‍🎓 Enjoy your 20s!";
-  } else if (age < 50) {
-    milestone.innerText = "💼 Prime working years!";
-  } else if (age < 65) {
-    milestone.innerText = "🎯 Midlife explorer!";
-  } else {
-    milestone.innerText = "👴 Golden years ahead!";
+  if (now < thisYearBirthday) {
+    ageYears--; // hasn't had birthday yet this year
   }
 
-  // Avatar based on age
-  if (age < 5) {
-    avatar.innerText = "👶 Baby";
-  } else if (age < 13) {
-    avatar.innerText = "🧒 Kid";
-  } else if (age < 20) {
-    avatar.innerText = "🧑 Teen";
-  } else if (age < 40) {
-    avatar.innerText = "🧑‍💼 Adult";
-  } else if (age < 60) {
-    avatar.innerText = "🧓 Mature";
-  } else {
-    avatar.innerText = "👵 Senior";
+  result.innerText = `🎂 You are ${ageYears} years old!`;
+
+  // Breakdown
+  const ageMilliseconds = now - birthDate;
+  const ageDays = Math.floor(ageMilliseconds / (1000 * 60 * 60 * 24));
+  const ageHours = Math.floor(ageMilliseconds / (1000 * 60 * 60));
+  const ageMinutes = Math.floor(ageMilliseconds / (1000 * 60));
+  const ageSeconds = Math.floor(ageMilliseconds / 1000);
+  const ageMonths = ageYears * 12 + (now.getMonth() - birthDate.getMonth());
+
+  breakdown.innerHTML = `
+    🧮 <strong>Breakdown:</strong><br>
+    • ${ageMonths} months<br>
+    • ${ageDays} days<br>
+    • ${ageHours} hours<br>
+    • ${ageMinutes} minutes<br>
+    • ${ageSeconds} seconds
+  `;
+
+  // Countdown to next birthday
+  let nextBirthday = new Date(now.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+  if (now > nextBirthday) {
+    nextBirthday.setFullYear(now.getFullYear() + 1);
   }
+  const daysLeft = Math.ceil((nextBirthday - now) / (1000 * 60 * 60 * 24));
+  countdown.innerText = daysLeft === 0
+    ? "🎉 Today is your birthday!"
+    : `⏳ ${daysLeft} day(s) until your next birthday`;
+
+  // Fun Fact (static example)
+  const birthYear = birthDate.getFullYear();
+  let fact = "";
+  if (birthYear === 2004) fact = "You were born the year Facebook was founded!";
+  else if (birthYear === 1995) fact = "JavaScript was created in your birth year!";
+  else if (birthYear === 2010) fact = "iPad was launched the year you were born!";
+  else fact = `You were born in ${birthYear}. A great year!`;
+
+  funFact.innerText = `📚 Fun Fact: ${fact}`;
+
+  // Simulated AI age prediction
+  const guess = ageYears + Math.floor(Math.random() * 5 - 2); // +/- 2
+  aiPredict.innerText = `🤖 AI guesses you're ${guess} years old based on vibes 😄`;
 }
 
-// Reset all inputs and messages
 function resetForm() {
-  document.getElementById("birthYear").value = "";
+  document.getElementById("birthDate").value = "";
   document.getElementById("result").innerText = "";
-  document.getElementById("milestone").innerText = "";
-  document.getElementById("avatar").innerText = "";
+  document.getElementById("breakdown").innerText = "";
+  document.getElementById("countdown").innerText = "";
+  document.getElementById("funFact").innerText = "";
+  document.getElementById("aiPredict").innerText = "";
+  document.getElementById("copyMsg").innerText = "";
+}
+
+function copyAgeCard() {
+  const result = document.getElementById("result").innerText;
+  const breakdown = document.getElementById("breakdown").innerText;
+  const countdown = document.getElementById("countdown").innerText;
+  const funFact = document.getElementById("funFact").innerText;
+  const aiPredict = document.getElementById("aiPredict").innerText;
+
+  const cardText = `${result}\n${breakdown}\n${countdown}\n${funFact}\n${aiPredict}`;
+  navigator.clipboard.writeText(cardText).then(() => {
+    document.getElementById("copyMsg").innerText = "✅ Age card copied to clipboard!";
+  });
 }
