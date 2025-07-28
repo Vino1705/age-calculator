@@ -16,6 +16,21 @@ function toggleTheme() {
   themeBtn.innerText = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
 }
 
+function animateCount(element, target) {
+  let count = 0;
+  const step = Math.ceil(target / 60);
+  function update() {
+    count += step;
+    if (count >= target) {
+      element.innerText = target.toLocaleString();
+    } else {
+      element.innerText = count.toLocaleString();
+      requestAnimationFrame(update);
+    }
+  }
+  update();
+}
+
 function calculateEverything() {
   const birthDateInput = document.getElementById("birthDate");
   const result = document.getElementById("result");
@@ -59,12 +74,18 @@ function calculateEverything() {
 
   breakdown.innerHTML = `
     🧮 <strong>Breakdown:</strong><br>
-    • ${ageMonths} months<br>
-    • ${ageDays} days<br>
-    • ${ageHours} hours<br>
-    • ${ageMinutes} minutes<br>
-    • ${ageSeconds} seconds
+    • <span id="monthsVal">${ageMonths}</span> months<br>
+    • <span id="daysVal">${ageDays}</span> days<br>
+    • <span id="hoursVal">${ageHours}</span> hours<br>
+    • <span id="minutesVal">${ageMinutes}</span> minutes<br>
+    • <span id="secondsVal">${ageSeconds}</span> seconds
   `;
+
+  animateCount(document.getElementById("monthsVal"), ageMonths);
+  animateCount(document.getElementById("daysVal"), ageDays);
+  animateCount(document.getElementById("hoursVal"), ageHours);
+  animateCount(document.getElementById("minutesVal"), ageMinutes);
+  animateCount(document.getElementById("secondsVal"), ageSeconds);
 
   let nextBirthday = new Date(now.getFullYear(), birthDate.getMonth(), birthDate.getDate());
   if (now > nextBirthday) nextBirthday.setFullYear(now.getFullYear() + 1);
@@ -138,6 +159,8 @@ function calculateEverything() {
   milestones.innerHTML = `
     📜 <strong>Milestones You've Lived Through:</strong><br>
     ${milestoneList.join("<br>")}`;
+
+  document.getElementById("ageCard").scrollIntoView({ behavior: "smooth" });
 }
 
 function resetForm() {
